@@ -876,7 +876,9 @@ public class ImsManager {
         SubscriptionManager.setSubscriptionProperty(getSubId(),
                 SubscriptionManager.WFC_IMS_ENABLED, booleanToPropertyString(enabled));
 
-        setWfcNonPersistent(enabled, getWfcMode());
+        TelephonyManager tm = (TelephonyManager)
+                mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        setWfcNonPersistent(enabled, getWfcMode(tm.isNetworkRoaming(getSubId())));
     }
 
     /**
@@ -1904,6 +1906,15 @@ public class ImsManager {
     /**
      * Sets the UI TTY mode. This is the preferred TTY mode that the user sets in the call
      * settings screen.
+     * @param uiTtyMode TTY Mode, valid options are:
+     *         - {@link com.android.internal.telephony.Phone#TTY_MODE_OFF}
+     *         - {@link com.android.internal.telephony.Phone#TTY_MODE_FULL}
+     *         - {@link com.android.internal.telephony.Phone#TTY_MODE_HCO}
+     *         - {@link com.android.internal.telephony.Phone#TTY_MODE_VCO}
+     * @param onComplete A Message that will be called by the ImsService when it has completed this
+     *           operation or null if not waiting for an async response. The Message must contain a
+     *           valid {@link Message#replyTo} {@link android.os.Messenger}, since it will be passed
+     *           through Binder to another process.
      */
     public void setUiTTYMode(Context context, int uiTtyMode, Message onComplete)
             throws ImsException {
