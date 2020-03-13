@@ -2159,12 +2159,8 @@ public class ImsManager {
     public boolean updateRttConfigValue() {
         boolean isCarrierSupported =
                 getBooleanCarrierConfig(CarrierConfigManager.KEY_RTT_SUPPORTED_BOOL);
-        if (getBooleanCarrierConfig(CarrierConfigManager.KEY_RTT_ALWAYS_ENABLED_BOOL)) {
-            Settings.Secure.putInt(mContext.getContentResolver(),
-                    Settings.Secure.RTT_CALLING_MODE + convertRttPhoneId(mPhoneId), 1);
-        }
         boolean isRttEnabled = Settings.Secure.getInt(mContext.getContentResolver(),
-                Settings.Secure.RTT_CALLING_MODE + convertRttPhoneId(mPhoneId), 0) != 0;
+                Settings.Secure.RTT_CALLING_MODE, 0) != 0;
         Log.i(ImsManager.class.getSimpleName(), "update RTT value " + isRttEnabled);
         if (isCarrierSupported == true) {
             setRttConfig(isRttEnabled);
